@@ -20,7 +20,7 @@ spec:
         app: jenkins
     spec:
       serviceAccountName: jenkins
-      dnsPolicy: None
+#      dnsPolicy: None
       dnsConfig:
         nameservers:
           - 10.233.0.1
@@ -29,16 +29,16 @@ spec:
         searches:
           - cluster.local
           - svc.cluster.local
-#          - hello.svc.cluster.local
+          - hello.svc.cluster.local
       hostAliases:
         - ip: 10.233.0.1
         - ip: 8.8.8.8
           hostnames:
             - dns.google.local
             - dns8.google.local
-#        - ip: 8.8.4.4
-#          hostnames:
-#            - dns4.google.local
+        - ip: 8.8.4.4
+          hostnames:
+            - dns4.google.local
       containers:
       - name: jenkins
         image: alsxs/cikoriy23033

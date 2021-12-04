@@ -45,7 +45,7 @@ pipeline {
             steps {
                 echo " ============== Change app-deploy =================="
                 withKubeConfig([credentialsId: '5959ed6b-7147-41c8-8f63-f157140d2c73',
-                    serverUrl: 'https://127.0.0.1:6443',
+                    serverUrl: 'https://kubernetes.default:443',
                     contextName: 'kubernetes-admin@cluster.local',
                     clusterName: 'cluster.local',
                     namespace: 'default'
