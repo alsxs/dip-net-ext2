@@ -6,7 +6,7 @@ pipeline {
     }
     triggers { pollSCM('* * * * *') }
     environment {
-		DOCKERHUB_CREDENTIALS=credentials('bf691576-1ebd-4581-80a7-18368acf5bf9')
+		DOCKERHUB_CREDENTIALS=credentials('35959979-9015-49e4-a7fb-916786b9572d')
 	}
     stages {
 
@@ -17,7 +17,6 @@ pipeline {
 			steps {
 
 			    echo " ============== gitclone =================="
-			    git 'config --global --unset https.proxy'
 				git 'https://github.com/alsxs/dip-net-ext2.git'
 			}
 		}
@@ -45,7 +44,7 @@ pipeline {
 		stage('Kubernetes') {
             steps {
                 echo " ============== Change app-deploy =================="
-                withKubeConfig([credentialsId: '2faebf6f-b5f5-4d89-ba02-4da4a5734ce1',
+                withKubeConfig([credentialsId: '5959ed6b-7147-41c8-8f63-f157140d2c73',
                     serverUrl: 'https://127.0.0.1:6443',
                     contextName: 'kubernetes-admin@cluster.local',
                     clusterName: 'cluster.local',
