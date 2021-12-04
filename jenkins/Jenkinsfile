@@ -1,0 +1,62 @@
+pipeline {
+    agent {
+        kubernetes{
+            label 'agent'
+        }
+    }
+    triggers { pollSCM('* * * * *') }
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('bf691576-1ebd-4581-80a7-18368acf5bf9')
+	}
+    stages {
+
+	    stage('gitclone') {
+            when {
+                branch 'main'
+            }
+			steps {
+
+			    echo " ============== gitclone =================="
+				git 'https://github.com/alsxs/dip-net-ext2.git'
+			}
+		}
+
+		stage('Build') {
+
+			steps {
+			    echo " ============== Build =================="
+			    dir ('app') {
+				    sh 'sudo docker build -t alsxs/nginx:app${BUILD_TIMESTAMP} .'
+				}
+			}
+		}
+
+		stage('Login + push') {
+
+			steps {
+			    echo " ============== Dockerhub login + push =================="
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+				sh 'sudo docker tag alsxs/nginx:app${BUILD_TIMESTAMP} alsxs/nginx:app${BUILD_TIMESTAMP}'
+				sh 'sudo docker push alsxs/nginx:app${BUILD_TIMESTAMP}'
+			}
+		}
+
+		stage('Kubernetes') {
+            steps {
+                echo " ============== Change app-deploy =================="
+                withKubeConfig([credentialsId: '2faebf6f-b5f5-4d89-ba02-4da4a5734ce1',
+                    serverUrl: 'https://127.0.0.1:6443',
+                    contextName: 'kubernetes-admin@cluster.local',
+                    clusterName: 'cluster.local',
+                    namespace: 'default'
+                    ]) {
+                        sh 'kubectl delete deploy app-dip'
+                        sh 'kubectl create deployment app-dip --image=alsxs/nginx:app${BUILD_TIMESTAMP} --port=80'
+                        sh 'kubectl scale deployment app-dip --replicas 3'
+                }
+            }
+        }
+    }
+}
+
+
