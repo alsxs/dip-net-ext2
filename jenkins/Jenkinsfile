@@ -17,6 +17,7 @@ pipeline {
 			steps {
 
 			    echo " ============== gitclone =================="
+			    git 'config --global --unset https.proxy'
 				git 'https://github.com/alsxs/dip-net-ext2.git'
 			}
 		}
