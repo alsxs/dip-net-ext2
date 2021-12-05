@@ -20,18 +20,20 @@ spec:
         app: jenkins
     spec:
       serviceAccountName: jenkins
-#      dnsPolicy: None
-#      dnsConfig:
-#        nameservers:
-#          - 10.233.0.1
-#          - 10.233.0.3
-#          - 192.168.12.12
-#        searches:
-#          - cluster.local
-#          - svc.cluster.local
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 10.233.0.1
+          - 10.233.0.3
+          - 8.8.8.8
+        searches:
+          - cluster.local
+          - svc.cluster.local
 #          - default.svc.cluster.local
+#        options:
+#          - name: single-request-reopen
 #      hostAliases:
-#        - ip: 10.233.0.1
+#        - ip: 10.233.0.3
 #        - ip: 8.8.8.8
 #          hostnames:
 #            - dns.google.local

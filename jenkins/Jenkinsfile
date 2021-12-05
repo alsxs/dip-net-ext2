@@ -6,7 +6,7 @@ pipeline {
     }
     triggers { pollSCM('* * * * *') }
     environment {
-		DOCKERHUB_CREDENTIALS=credentials('5b81b6c7-3601-43a3-a3bb-d79c6eba6489')
+		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
 	}
     stages {
 
@@ -44,7 +44,7 @@ pipeline {
 		stage('Kubernetes') {
             steps {
                 echo " ============== Change app-deploy =================="
-                withKubeConfig([credentialsId: '79efd54c-060a-46e2-a0e4-1dc97ca8a080',
+                withKubeConfig([credentialsId: 'e098f8f3-4d8d-4977-8055-8cdc1341ab55',
                     serverUrl: 'https://kubernetes.default:443',
                     contextName: 'kubernetes-admin@cluster.local',
                     clusterName: 'cluster.local',
