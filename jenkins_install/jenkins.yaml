@@ -21,24 +21,24 @@ spec:
     spec:
       serviceAccountName: jenkins
 #      dnsPolicy: None
-      dnsConfig:
-        nameservers:
-          - 10.233.0.1
-          - 10.233.0.53
-          - 8.8.8.8
-        searches:
-          - cluster.local
-          - svc.cluster.local
-          - hello.svc.cluster.local
-      hostAliases:
-        - ip: 10.233.0.1
-        - ip: 8.8.8.8
-          hostnames:
-            - dns.google.local
-            - dns8.google.local
-        - ip: 8.8.4.4
-          hostnames:
-            - dns4.google.local
+#      dnsConfig:
+#        nameservers:
+#          - 10.233.0.1
+#          - 10.233.0.3
+#          - 192.168.12.12
+#        searches:
+#          - cluster.local
+#          - svc.cluster.local
+#          - default.svc.cluster.local
+#      hostAliases:
+#        - ip: 10.233.0.1
+#        - ip: 8.8.8.8
+#          hostnames:
+#            - dns.google.local
+#            - dns8.google.local
+#        - ip: 8.8.4.4
+#          hostnames:
+#            - dns4.google.local
       containers:
       - name: jenkins
         image: alsxs/cikoriy23033
@@ -63,25 +63,25 @@ spec:
         persistentVolumeClaim:
           claimName: jenkins-pvc
 
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: jenkins
-#  labels:
-#    app: jenkins
-#spec:
-#  type: LoadBalancer
-#  ports:
-#    - name: ui
-#      port: 8080
-#      targetPort: 8080
-#      protocol: TCP
-#    - name: agent
-#      port: 50000
-#      protocol: TCP
-#    - name: http
-#      port: 80
-#      targetPort: 8080
-#  selector:
-#    app: jenkins
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  labels:
+    app: jenkins
+spec:
+  type: LoadBalancer
+  ports:
+    - name: ui
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+    - name: agent
+      port: 50000
+      protocol: TCP
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: jenkins
