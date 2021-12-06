@@ -7,10 +7,7 @@ pipeline {
     triggers {
         GenericTrigger(
              genericVariables: [
-              [key: 'web_url', value: '$.project.web_url'],
-              [key: 'branchName', value: '$.changes[0].ref.displayId'],
               [key: 'ref', value: '$.ref'],
-              [key: 'heads', value: '$.ref', regexpFilter: 'refs/heads/'],
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
@@ -46,10 +43,9 @@ pipeline {
 		stage('Build') {
 			steps {
 			    echo " ============== Build ================== "
-                println $BRANCH_TAG
-                println $COMMIT_TAG
-                println $heads
-                println $branchName
+                echo ${BRANCH_TAG}
+                echo ${COMMIT_TAG}
+                sh 'git pull'
 			    dir ('app') {
 			        sh 'git checkout $COMMIT_TAG'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
