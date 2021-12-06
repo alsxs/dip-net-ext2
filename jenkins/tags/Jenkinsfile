@@ -26,7 +26,9 @@ pipeline {
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-        branch_name = sh 'git branch --contains $checkout_sha'
+        branch_name = sh(returnStdout: true, script: 'git branch --contains $commit').trim()
+
+
 	}
 
 
@@ -38,9 +40,6 @@ pipeline {
             }
 			steps {
 			    echo " ============== gitclone =================="
-                echo $branch_name
-                echo $checkout_sha
-                echo $commit
                 git 'https://github.com/alsxs/dip-net-ext2.git'
 
 			}
@@ -50,11 +49,11 @@ pipeline {
 
 			steps {
 			    echo " ============== Build =================="
-			    echo $branch_name
+			    echo "$branch_name"
                 echo $checkout_sha
                 echo $commit
 			    dir ('app') {
-			        sh 'git checkout $checkout_sha'
+			        sh 'git checkout $commit'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
 				}
 			}
