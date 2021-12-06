@@ -5,7 +5,7 @@ pipeline {
         }
     }
     triggers {
-        GenericTrigger(
+        genericTrigger(
              genericVariables: [
               [ key: 'committer_name', value: '$.actor.displayName' ],
               [ key: 'ref', value: '$.changes[0].refId'],
