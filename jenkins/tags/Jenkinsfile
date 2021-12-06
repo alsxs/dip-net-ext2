@@ -12,7 +12,7 @@ pipeline {
               [key: 'web_url', value: '$.project.web_url'],
               [key: 'commit', value: '$.changes[0].toHash'],
               [key: 'ref', value: '$.ref'],
-              [key: 'br', value: '$.ref', regexpFilter: 'refs/heads/'],
+              [key: 'branch', value: '$.ref', regexpFilter: 'refs/heads/'],
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
@@ -46,7 +46,7 @@ pipeline {
 
 		stage('Build') {
 			steps {
-			    echo " ============== Build ================== $br"
+			    echo " ============== Build ================== "
 			    dir ('app') {
 			        sh 'git checkout tags/$tag'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
