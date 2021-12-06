@@ -4,7 +4,7 @@ pipeline {
             label 'agent'
         }
     }
-    options([
+    properties([
       pipelineTriggers([
        [$class: 'GenericTrigger',
         genericVariables: [
