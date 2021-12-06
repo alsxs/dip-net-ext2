@@ -7,10 +7,8 @@ pipeline {
     triggers {
         GenericTrigger(
              genericVariables: [
-              [key: 'user_name', value: '$.user_name'],
-              [key: 'checkout_sha', value: '$.checkout_sha'],
               [key: 'web_url', value: '$.project.web_url'],
-              [key: 'commit', value: '$.changes[0].toHash'],
+              [key: 'branchName', value: '$.changes[0].ref.displayId'],
               [key: 'ref', value: '$.ref'],
               [key: 'heads', value: '$.ref', regexpFilter: 'refs/heads/'],
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
@@ -23,6 +21,8 @@ pipeline {
 
              regexpFilterText: '$ref',
              regexpFilterExpression: '^refs/tags/.*'
+             regexpFilterText: '$branchName',
+             regexpFilterExpression: 'refs/heads/master'
             )
     }
     environment {
@@ -48,7 +48,12 @@ pipeline {
 			steps {
 			    echo " ============== Build ================== "
 			    dir ('app') {
-			        sh 'git checkout tags/$tag'
+			        BRANCH_TAG = sh(returnStdout: true, script: 'git branch --contains tags/$tag').trim()
+			        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -h 1 $tag').trim()
+			        println $BRANCH_TAG
+			        println $COMMIT_TAG
+			        sh 'git pull'
+			        sh 'git checkout $COMMIT_TAG'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
 				}
 			}
