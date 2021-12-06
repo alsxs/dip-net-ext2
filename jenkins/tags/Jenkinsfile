@@ -12,6 +12,7 @@ pipeline {
               [key: 'web_url', value: '$.project.web_url'],
               [key: 'commit', value: '$.changes[0].toHash'],
               [key: 'ref', value: '$.ref'],
+              [key: 'br', value: '$.ref', regexpFilter: 'refs/heads/'],
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
@@ -21,12 +22,12 @@ pipeline {
              printPostContent: true,
 
              regexpFilterText: '$ref',
-             regexpFilterExpression: '^refs/tags/.*'
+             regexpFilterExpression: '^refs/tags/.*' + '^refs/heads/main$'
             )
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-        BRANCH_NAME = sh(returnStdout: true, script: 'git branch --contains $checkout_sha').trim()
+
 	}
 
 
@@ -45,10 +46,9 @@ pipeline {
 
 		stage('Build') {
 			steps {
-			    echo " ============== Build =================="
-			    echo "${BRANCH_NAME}"
+			    echo " ============== Build ================== $br"
 			    dir ('app') {
-			        sh 'git checkout $commit'
+			        sh 'git checkout tags/$tag'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
 				}
 			}
