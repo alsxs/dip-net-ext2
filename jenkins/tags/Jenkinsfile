@@ -11,7 +11,7 @@ pipeline {
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
-             causeString: '$user_name pushed tag $tag to $web_url referencing $commit',
+             causeString: 'pushed tag $tag',
 
              printContributedVariables: true,
              printPostContent: true,
@@ -43,8 +43,8 @@ pipeline {
 		stage('Build') {
 			steps {
 			    echo " ============== Build ================== "
-                echo ${BRANCH_TAG}
-                echo ${COMMIT_TAG}
+                echo "BRANCH_TAG: ${BRANCH_TAG}"
+                echo "COMMIT_TAG: ${COMMIT_TAG}"
                 sh 'git pull'
 			    dir ('app') {
 			        sh 'git checkout $COMMIT_TAG'
