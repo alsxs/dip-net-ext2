@@ -5,14 +5,13 @@ pipeline {
         }
     }
     triggers {
-        genericTrigger(
+        GenericTrigger(
              genericVariables: [
-              [ key: 'committer_name', value: '$.actor.displayName' ],
-              [ key: 'ref', value: '$.changes[0].refId'],
-              [ key: 'tag', value: '$.changes[0].refId', regexpFilter: 'refs/tags/'],
-              [ key: 'commit', value: '$.changes[0].toHash' ],
-              [ key: 'project_key', value: '$.repository.project.key' ],
-              [ key: 'clone_url', value: '$.repository.links.clone[0].href' ]
+              [key: 'user_name', value: '$.user_name'],
+              [key: 'checkout_sha', value: '$.checkout_sha'],
+              [key: 'web_url', value: '$.project.web_url'],
+              [key: 'ref', value: '$.ref'],
+              [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
              causeString: '$committer_name pushed tag $tag to $clone_url referencing $commit',
