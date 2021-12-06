@@ -10,23 +10,21 @@ pipeline {
               [key: 'user_name', value: '$.user_name'],
               [key: 'checkout_sha', value: '$.checkout_sha'],
               [key: 'web_url', value: '$.project.web_url'],
-              [key: 'commit', value: '$.changes[0].toHash'],
               [key: 'ref', value: '$.ref'],
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
-             causeString: '$user_name pushed tag $tag to $web_url referencing $commit',
+             causeString: '$committer_name pushed tag $tag to $clone_url referencing $commit',
 
              printContributedVariables: true,
              printPostContent: true,
 
              regexpFilterText: '$ref',
-             regexpFilterExpression: '^refs/tags/.*'
+             regexpFilterExpression: '^refs/tags/.*' + 'main'
             )
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-        branch_name = sh 'git branch --contains $checkout_sha'
 	}
 
 
@@ -34,15 +32,12 @@ pipeline {
 
 	    stage('gitclone') {
             when {
-                branch 'master'
+                branch 'main'
             }
 			steps {
-			    echo " ============== gitclone =================="
-                echo $branch_name
-                echo $checkout_sha
-                echo $commit
-                git 'https://github.com/alsxs/dip-net-ext2.git'
 
+			    echo " ============== gitclone =================="
+				git 'https://github.com/alsxs/dip-net-ext2.git'
 			}
 		}
 
