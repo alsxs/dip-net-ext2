@@ -1,0 +1,44 @@
+pipeline {
+    agent {
+        kubernetes{
+            label 'agent'
+        }
+    }
+    triggers { pollSCM('* * * * *') }
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
+	}
+    stages {
+
+	    stage('gitclone') {
+            when {
+                branch 'main'
+            }
+			steps {
+
+			    echo " ============== gitclone =================="
+				git 'https://github.com/alsxs/dip-net-ext2.git'
+			}
+		}
+
+		stage('Build') {
+
+			steps {
+			    echo " ============== Build =================="
+			    dir ('app') {
+				    sh 'sudo docker build -t alsxs/nginx:latest .'
+				}
+			}
+		}
+
+		stage('Login + push') {
+
+			steps {
+			    echo " ============== Dockerhub login + push =================="
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+				sh 'sudo docker tag alsxs/nginx:latest alsxs/nginx:latest'
+				sh 'sudo docker push alsxs/nginx:latest'
+			}
+		}
+    }
+}
