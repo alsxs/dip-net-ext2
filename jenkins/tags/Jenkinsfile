@@ -44,12 +44,9 @@ pipeline {
 		}
 
 		stage('Build') {
-
 			steps {
 			    echo " ============== Build =================="
-			    echo "$branch_name"
-                echo $checkout_sha
-                echo $commit
+			    echo "${branch_name}"
 			    dir ('app') {
 			        sh 'git checkout $commit'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
