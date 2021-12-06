@@ -21,13 +21,12 @@ pipeline {
 
              regexpFilterText: '$ref',
              regexpFilterExpression: '^refs/tags/.*'
-             regexpFilterText: '$branchName',
-             regexpFilterExpression: 'refs/heads/master'
             )
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-
+        BRANCH_TAG = sh(returnStdout: true, script: 'git branch --contains tags/$tag').trim()
+        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -h 1 $tag').trim()
 	}
 
 
@@ -47,12 +46,11 @@ pipeline {
 		stage('Build') {
 			steps {
 			    echo " ============== Build ================== "
+                println $BRANCH_TAG
+                println $COMMIT_TAG
+                println $heads
+                println $branchName
 			    dir ('app') {
-			        BRANCH_TAG = sh(returnStdout: true, script: 'git branch --contains tags/$tag').trim()
-			        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -h 1 $tag').trim()
-			        println $BRANCH_TAG
-			        println $COMMIT_TAG
-			        sh 'git pull'
 			        sh 'git checkout $COMMIT_TAG'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
 				}
