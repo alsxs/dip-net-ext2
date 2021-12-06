@@ -26,7 +26,7 @@ pipeline {
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-        branch_name = sh(returnStdout: true, script: 'git branch --contains $commit').trim()
+        BRANCH_NAME = sh(returnStdout: true, script: 'git branch --contains $commit').trim()
 	}
 
 
@@ -46,7 +46,7 @@ pipeline {
 		stage('Build') {
 			steps {
 			    echo " ============== Build =================="
-			    echo "${branch_name}"
+			    echo "${BRANCH_NAME}"
 			    dir ('app') {
 			        sh 'git checkout $commit'
 				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
