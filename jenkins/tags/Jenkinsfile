@@ -12,7 +12,7 @@ pipeline {
               [key: 'web_url', value: '$.project.web_url'],
               [key: 'commit', value: '$.changes[0].toHash'],
               [key: 'ref', value: '$.ref'],
-              [key: 'branch', value: '$.ref', regexpFilter: 'refs/heads/'],
+              [key: 'heads', value: '$.ref', regexpFilter: 'refs/heads/'],
               [key: 'tag', value: '$.ref', regexpFilter: 'refs/tags/'],
              ],
 
