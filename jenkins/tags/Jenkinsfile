@@ -47,7 +47,7 @@ pipeline {
                 echo "BRANCH_TAG: ${BRANCH_TAG}"
                 echo "COMMIT_TAG: ${COMMIT_TAG}"
 			    script {
-			        if( "${BRANCH_TAG}" == 'main') {
+			        if( $BRANCH_TAG == 'main') {
 			            dir ('app') {
                             sh 'git checkout $COMMIT_TAG'
                             sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
