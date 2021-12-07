@@ -22,8 +22,7 @@ pipeline {
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-		COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
-        BRANCH_TAG = sh(returnStdout: true, script: 'git name-rev --name-only --exclude=tags/* $COMMIT_TAG').trim()
+
 
 	}
 
@@ -36,6 +35,8 @@ pipeline {
             }
 			steps {
 			    echo " ============== gitclone =================="
+
+                sh 'git checkout main'
                 git 'https://github.com/alsxs/dip-net-ext2.git'
 
 			}
@@ -44,6 +45,8 @@ pipeline {
 		stage('Build') {
 			steps {
 			    script {
+			            COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
+                        BRANCH_TAG = sh(returnStdout: true, script: 'git name-rev --name-only --exclude=tags/* $COMMIT_TAG').trim()
 			            if( env.BRANCH_TAG == "main") {
                             echo " ============== Build ================== "
                             echo "BRANCH_TAG: ${BRANCH_TAG}"
