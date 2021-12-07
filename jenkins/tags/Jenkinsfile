@@ -44,8 +44,8 @@ pipeline {
 			steps {
 			    script {
 			            COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
-                        BRANCH_TAG = sh(returnStdout: true, script: 'git name-rev --name-only --exclude=tags/* env.COMMIT_TAG').trim()
-			            if( env.BRANCH_TAG == "main") {
+                        BRANCH_TAG = sh(returnStdout: true, script: 'git name-rev --name-only --exclude=tags/* ${COMMIT_TAG}').trim()
+			            if( ${BRANCH_TAG} == "main") {
                             echo " ============== Build ================== "
                             echo "BRANCH_TAG: ${BRANCH_TAG}"
                             echo "COMMIT_TAG: ${COMMIT_TAG}"
