@@ -43,23 +43,23 @@ pipeline {
 
 		stage('Build') {
 			steps {
-			    echo " ============== Build ================== "
-                echo "BRANCH_TAG: ${BRANCH_TAG}"
-                echo "COMMIT_TAG: ${COMMIT_TAG}"
+			    script {
+			            if( $BRANCH_TAG == 'main') {
+                            echo " ============== Build ================== "
+                            echo "BRANCH_TAG: ${BRANCH_TAG}"
+                            echo "COMMIT_TAG: ${COMMIT_TAG}"
 
-			        if( $BRANCH_TAG == 'main') {
-			            dir ('app') {
-                            sh 'git checkout $COMMIT_TAG'
-                            sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
+
+                            dir ('app') {
+                                sh 'git checkout $COMMIT_TAG'
+                                sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
+                            }
+                        } else {
+                            currentBuild.result = 'FAILURE'
+                            error "Invalid branch name, end of pipeline"
+
                         }
-			        } else {
-			            currentBuild.result = 'FAILURE'
-                        error "Invalid branch name, end of pipeline"
-
-			        }
-
-
-
+                }
 
 			}
 		}
