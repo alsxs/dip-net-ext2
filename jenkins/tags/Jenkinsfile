@@ -22,11 +22,7 @@ pipeline {
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-
-
 	}
-
-
     stages {
 
 	    stage('gitclone') {
@@ -49,8 +45,6 @@ pipeline {
                             echo " ============== Build ================== "
                             echo "BRANCH_TAG: ${BRANCH_TAG}"
                             echo "COMMIT_TAG: ${COMMIT_TAG}"
-
-
                             dir ('app') {
                                 sh 'git checkout $COMMIT_TAG'
                                 sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
@@ -85,8 +79,7 @@ pipeline {
                     namespace: 'default'
                     ]) {
                         sh 'kubectl delete deploy app-dip'
-                        sh 'kubectl create deployment app-dip --image=alsxs/nginx:app_v$tag --port=80'
-                        sh 'kubectl scale deployment app-dip --replicas 3'
+                        sh 'cat kube/kube_app.yaml | sed -i -e "s/latest/app_v$tag/" | kubectl apply -f -'
                 }
             }
         }
