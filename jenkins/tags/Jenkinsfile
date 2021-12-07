@@ -79,7 +79,7 @@ pipeline {
                     namespace: 'default'
                     ]) {
                         sh 'kubectl delete deploy app-dip'
-                        sh 'cat kube/kube_app.yaml | sed -i -e "s/latest/app_v$tag/" | kubectl apply -f -'
+                        sh 'cat kube/kube_app.yaml | sed s/latest/app_v$tag/g | kubectl apply -f -'
                 }
             }
         }
