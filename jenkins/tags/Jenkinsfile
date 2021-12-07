@@ -30,7 +30,7 @@ pipeline {
                 branch 'main'
             }
 			steps {
-			    echo " ============== gitclone =================="
+			    echo " ============== gitclone ==================="
                 git 'https://github.com/alsxs/dip-net-ext2.git'
                 sh 'git checkout main'
 			}
