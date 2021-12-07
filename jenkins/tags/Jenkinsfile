@@ -22,8 +22,9 @@ pipeline {
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-        BRANCH_TAG = sh(returnStdout: true, script: 'git branch --contains tags/$tag').trim()
-        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
+		COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
+        BRANCH_TAG = sh(returnStdout: true, script: 'git name-rev --name-only --exclude=tags/* $COMMIT_TAG').trim()
+
 	}
 
 
@@ -45,11 +46,21 @@ pipeline {
 			    echo " ============== Build ================== "
                 echo "BRANCH_TAG: ${BRANCH_TAG}"
                 echo "COMMIT_TAG: ${COMMIT_TAG}"
-                sh 'git pull'
-			    dir ('app') {
-			        sh 'git checkout $COMMIT_TAG'
-				    sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
-				}
+			    script {
+			        if( "${BRANCH_TAG}" == 'main') {
+			            dir ('app') {
+                            sh 'git checkout $COMMIT_TAG'
+                            sh 'sudo docker build -t alsxs/nginx:app_v$tag .'
+                        }
+			        } else {
+			            currentBuild.result = 'FAILURE'
+                        error "Invalid branch name, end of pipeline"
+
+			        }
+
+			    }
+
+
 			}
 		}
 
