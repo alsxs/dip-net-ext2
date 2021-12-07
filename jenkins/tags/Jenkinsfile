@@ -22,8 +22,7 @@ pipeline {
     }
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('879885ca-4b90-4633-8803-9d6dbe8d7c53')
-        BRANCH_TAG = sh(returnStdout: true, script: 'git branch --contains tags/$tag').trim()
-        COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
+
 	}
 
 
@@ -43,6 +42,8 @@ pipeline {
 		stage('Build') {
 			steps {
 			    echo " ============== Build ================== "
+			    BRANCH_TAG = sh(returnStdout: true, script: 'git branch --contains tags/$tag').trim()
+                COMMIT_TAG = sh(returnStdout: true, script: 'git rev-list -n 1 $tag').trim()
                 echo "BRANCH_TAG: ${BRANCH_TAG}"
                 echo "COMMIT_TAG: ${COMMIT_TAG}"
                 sh 'git pull'
