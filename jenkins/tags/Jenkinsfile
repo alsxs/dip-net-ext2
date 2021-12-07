@@ -44,7 +44,7 @@ pipeline {
 		stage('Build') {
 			steps {
 			    script {
-			            if( $BRANCH_TAG == 'main') {
+			            if( env.BRANCH_TAG == "main") {
                             echo " ============== Build ================== "
                             echo "BRANCH_TAG: ${BRANCH_TAG}"
                             echo "COMMIT_TAG: ${COMMIT_TAG}"
